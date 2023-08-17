@@ -53,10 +53,8 @@ concept Numeric = std::is_arithmetic_v<T>;
 		- H: row count (height)
 */
 template<Numeric T, mat_dimension_type W=1, mat_dimension_type H=1>
-class matrix
+struct matrix
 {
-public:
-
 	std::array<T, W * H> data;
 
 	// Fills the matrix' data array with either zeros or a single number
@@ -213,7 +211,3 @@ using mat3i = matrix<int, 3, 3>;
 using mat4f = matrix<float, 4, 4>;
 
 using mat4i = matrix<int, 4, 4>;
-
-
-// TODO
-class quart : vec4f {};
