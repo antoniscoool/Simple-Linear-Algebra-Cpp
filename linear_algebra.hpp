@@ -24,18 +24,21 @@ inline constexpr bool _greater_or_equal = A >= B;
 #define MAKE_OPERATION(op,f)	template<Numeric _T, mat_dimension_type _W, mat_dimension_type _H> \
 								matrix<T, W, H> operator op (const matrix<_T, _W, _H>& other) requires _greater_or_equal<W,_W> and _greater_or_equal<H,_H> \
 								{ \
+									matrix<T, W, H> res = *this; \
 									for (mat_dimension_type i = 0; i < H; i++) \
 										for (mat_dimension_type j = 0; j < W; j++) \
-											data[j + i * W] op##= (j >= _W || i >= _H) ? (f) : other.data[j + i * W]; \
-									return *this; \
+											res.data[j + i * W] op##= (j >= _W || i >= _H) ? (f) : other.data[j + i * W]; \
+									return res; \
 								} \
 								matrix<T, W, H> operator##op##(const T val) \
 								{ \
+									matrix<T, W, H> res = *this; \
 									for (mat_dimension_type i = 0; i < H; i++) \
 										for (mat_dimension_type j = 0; j < W; j++) \
-											data[j + i * W] op##= val; \
-									return *this; \
+											res.data[j + i * W] op##= val; \
+									return res; \
 								} 
+
 
 // Defines the numeric type concept, a generic type which only accepts numeric types
 template<typename T>
@@ -154,10 +157,10 @@ public:
 	// Calculates the matrix that was linearly interpolated.
 	// NOTE: see operator overloads
 	template<Numeric _T, mat_dimension_type _W, mat_dimension_type _H>
-	matrix<T, W, H> Lerp(matrix<_T, _W, _H>& o, T t, bool clamp_to_values = false) requires _greater_or_equal<W, _W> and _greater_or_equal<H, _H>
+	matrix<T, W, H> Lerp(matrix<_T, _W, _H>& o, float t, bool clamp_to_values = false) requires _greater_or_equal<W, _W> and _greater_or_equal<H, _H>
 	{
-		if(clamp_to_values) t = std::clamp(t, (T)0, (T)1);
-		return (*this) * (((T)1) - t) + o * t;
+		if(clamp_to_values) t = std::clamp(t, 0.0f, 1.0f);
+		return (*this) * (1.0f - t) + o * t;
 	}
 
 	// Calculates the length/magnitude of the matrix
@@ -210,3 +213,7 @@ using mat3i = matrix<int, 3, 3>;
 using mat4f = matrix<float, 4, 4>;
 
 using mat4i = matrix<int, 4, 4>;
+
+
+// TODO
+class quart : vec4f {};
