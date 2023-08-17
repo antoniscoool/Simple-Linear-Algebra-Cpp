@@ -76,7 +76,8 @@ struct matrix
 	MAKE_OPERATION(*, 1);
 	MAKE_OPERATION(/, 1);
 
-	
+
+	// Converts a matrix to a matrix of a different numeric type
 	template<Numeric _T>
 	matrix<_T, W, H> CastToNum()
 	{
